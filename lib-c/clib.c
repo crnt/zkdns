@@ -57,10 +57,6 @@ get_rrset(const ldns_zone *zone, const ldns_rdf *owner_name, const ldns_rr_type 
 	ldns_rr_push_rdf(rr, rdf);
 	
 	ldns_rr_list_push_rr(rrlist, ldns_rr_clone(rr));
-	printf("Pushed rrecord set. of 10.0.0.1\n");
-	printf("Pushed <%s>.\n", owner_name->_data);
-
-	printf("Found rrset of %u rrs\n", (unsigned int) ldns_rr_list_rr_count(rrlist));
 	
 	return rrlist;
 }
@@ -126,17 +122,12 @@ void zkdns_start(const char* my_address, int port, const char* my_zone)
 		/*
 		show(inbuf, nb, nn, hp, sp, ip, bp);
 		*/
-		printf("Got query of %u bytes\n", (unsigned int) nb);
 		status = ldns_wire2pkt(&query_pkt, inbuf, (size_t) nb);
 		if (status != LDNS_STATUS_OK) {
 			printf("Got bad packet: %s\n", ldns_get_errorstr_by_id(status));
-		} else {
-			ldns_pkt_print(stdout, query_pkt);
 		}
 
 		query_rr = ldns_rr_list_rr(ldns_pkt_question(query_pkt), 0);
-		printf("QUERY RR: \n");
-		ldns_rr_print(stdout, query_rr);
 		
 		answer_qr = ldns_rr_list_new();
 		ldns_rr_list_push_rr(answer_qr, ldns_rr_clone(query_rr));
@@ -157,7 +148,6 @@ void zkdns_start(const char* my_address, int port, const char* my_zone)
 
 		status = ldns_pkt2wire(&outbuf, answer_pkt, &answer_size);
 		
-		printf("Answer packet size: %u bytes.\n", (unsigned int) answer_size);
 		if (status != LDNS_STATUS_OK) {
 			printf("Error creating answer: %s\n", ldns_get_errorstr_by_id(status));
 		} else {
