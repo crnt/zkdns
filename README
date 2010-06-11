@@ -1,0 +1,9 @@
+Subdirectories:
+
+lib-c:   Generic C library for making a trivial DNS server
+lib-cpp: C++ wrapper library around lib-c
+src:     The zkdns server, using lib-cpp
+
+Please note that this DNS server is trivial, and should not be public-facing,
+trusted to be reliable, etc. It's purely as a convenience, eg for accessing
+the HBase Master web interface.
