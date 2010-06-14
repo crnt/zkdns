@@ -53,14 +53,31 @@ std::string ZooKeeper::value(const char* path)
 			throw BadStateError();
 		case ZMARSHALLINGERROR:
 			throw MarshallingError();
+		default:
+			throw LogicError("Unknown ZooKeeper Response");
 	}
-	throw LogicError("Unknown ZooKeeper Response");
 }
 
 void ZooKeeper::setValue(const char* path, const std::string& value)
 {
-	zoo_set(m_zk, path, value.data(), value.size(), -1);
-	///@todo throw, depending on return value
+	const int result = zoo_set(m_zk, path, value.data(), value.size(), -1);
+	switch(result)
+	{
+		case ZOK:
+			return;
+		case ZNONODE:
+			throw NoSuchNodeError();
+		case ZNOAUTH:
+			throw PermissionsError();
+		case ZBADVERSION:
+			throw LogicError("Version error reported when -1 given as version");
+		case ZINVALIDSTATE:
+			throw BadStateError();
+		case ZMARSHALLINGERROR:
+			throw MarshallingError();
+		default:
+			throw LogicError("Unknown ZooKeeper response");
+	}
 }
 
 std::string ZooKeeper::createNode(const char* path, const std::string& value, EphemeralMode ephemeralMode, SequenceMode sequenceMode)
