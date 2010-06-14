@@ -1,6 +1,6 @@
 /*
- * Copyright (c), 2010 Fred Emmott <mail@fredemmott.co.uk>
- * Copyright (c), 2010 Mendeley Limited <copyright@mendeley.com>
+ * Copyright (c) 2010, Fred Emmott <mail@fredemmott.co.uk>
+ * Copyright (c) 2010, Mendeley Limited <copyright@mendeley.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -92,9 +92,28 @@ std::string ZooKeeper::createNode(const char* path, const std::string& value, Ep
 		createFlags |= ZOO_SEQUENCE;
 	}
 	char buffer[1024];
-	zoo_create(m_zk, path, value.data(), value.size(), &ZOO_OPEN_ACL_UNSAFE, createFlags, buffer, sizeof(buffer));
-	///@todo check return value
-	return std::string(buffer);
+	const int result = zoo_create(m_zk, path, value.data(), value.size(), &ZOO_OPEN_ACL_UNSAFE, createFlags, buffer, sizeof(buffer));
+	switch(result)
+	{
+		case ZOK:
+			return std::string(buffer);
+		case ZNONODE:
+			throw NoSuchNodeError();
+		case ZNODEEXISTS:
+			throw NodeExistsError();
+		case ZNOAUTH:
+			throw PermissionsError();
+		case ZNOCHILDRENFOREPHEMERALS:
+			throw LogicError("Ephemeral nodes can not have children.");
+		case ZBADARGUMENTS:
+			throw BadArgumentsError();
+		case ZINVALIDSTATE:
+			throw BadStateError();
+		case ZMARSHALLINGERROR:
+			throw MarshallingError();
+		default:
+			throw LogicError("Unknown ZooKeeper response");
+	}
 }
 
 ZooKeeper::~ZooKeeper()

@@ -1,6 +1,6 @@
 /*
- * Copyright (c), 2010 Fred Emmott <mail@fredemmott.co.uk>
- * Copyright (c), 2010 Mendeley Limited <copyright@mendeley.com>
+ * Copyright (c) 2010, Fred Emmott <mail@fredemmott.co.uk>
+ * Copyright (c) 2010, Mendeley Limited <copyright@mendeley.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -27,6 +27,7 @@ class ZooKeeper
 		class RuntimeError: public std::runtime_error { public: RuntimeError(const std::string& s) : std::runtime_error(s) {}; };
 		class LogicError: public std::logic_error { public: LogicError(const std::string& s) : std::logic_error(s) {}; };
 		class NoSuchNodeError: public RuntimeError { public: NoSuchNodeError() : RuntimeError("ZooKeeper::NoSuchNodeError") {} };
+		class NodeExistsError: public RuntimeError { public: NodeExistsError() : RuntimeError("ZooKeeper::NodeExistsError") {} }; // Create call
 		class PermissionsError: public RuntimeError { public: PermissionsError() : RuntimeError("ZooKeeper::PermissionsError") {} };
 		class BadArgumentsError: public LogicError { public: BadArgumentsError() : LogicError("ZooKeeper::BadArgumentsError") {} };
 		class BadStateError: public RuntimeError { public: BadStateError() : RuntimeError("ZooKeeper::BadStateError") {} };
