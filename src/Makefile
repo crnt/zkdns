@@ -6,10 +6,11 @@ LDFLAGS=\
 	-L../lib-cpp \
 	-L../lib-c \
 	-lldns \
+	-lzookeeper_st \
 
 .PHONY: clean
 
-CLASS_OBJECTS=ZooKeeperRecordProvider.o
+CLASS_OBJECTS=ZooKeeperRecordProvider.o ZooKeeper.o
 OBJECTS=$(CLASS_OBJECTS) main.o
 
 %.o: %.h %.cpp
