@@ -46,6 +46,11 @@ static int udp_bind(int sock, int port, const char *my_address)
 ldns_rr_list *
 get_rrset(const ldns_zone *zone, const ldns_rdf *owner_name, const ldns_rr_type qtype, const ldns_rr_class qclass)
 {
+	char* result = rp_get_a_record(rp_handle, owner_name->_data);
+	if(!result)
+	{
+		return 0;
+	}
 	uint16_t i;
 	ldns_rr_list *rrlist = ldns_rr_list_new();
 	if (!zone || !owner_name) {
@@ -55,7 +60,7 @@ get_rrset(const ldns_zone *zone, const ldns_rdf *owner_name, const ldns_rr_type 
 
 	ldns_rr* rr = ldns_rr_new_frm_type(LDNS_RR_TYPE_A);
 	ldns_rr_set_owner(rr, ldns_rdf_clone(owner_name));
-	ldns_rdf* rdf = ldns_rdf_new_frm_str(LDNS_RDF_TYPE_A, rp_get_a_record(rp_handle, owner_name->_data));
+	ldns_rdf* rdf = ldns_rdf_new_frm_str(LDNS_RDF_TYPE_A, result);
 	ldns_rr_push_rdf(rr, rdf);
 	
 	ldns_rr_list_push_rr(rrlist, ldns_rr_clone(rr));
