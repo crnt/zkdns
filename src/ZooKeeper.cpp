@@ -34,11 +34,11 @@ ZooKeeper::ZooKeeper()
 	m_zk = zookeeper_init("localhost:2181", watcher, 30000, 0, this, 0);
 }
 
-std::string ZooKeeper::value(const char* path)
+std::string ZooKeeper::value(const std::string& path)
 {
 	char buffer[1024];
 	int length = sizeof(buffer);
-	const int result = zoo_get(m_zk, path, 0, buffer, &length, 0);
+	const int result = zoo_get(m_zk, path.c_str(), 0, buffer, &length, 0);
 	switch(result)
 	{
 		case ZOK:
@@ -58,9 +58,9 @@ std::string ZooKeeper::value(const char* path)
 	}
 }
 
-void ZooKeeper::setValue(const char* path, const std::string& value)
+void ZooKeeper::setValue(const std::string& path, const std::string& value)
 {
-	const int result = zoo_set(m_zk, path, value.data(), value.size(), -1);
+	const int result = zoo_set(m_zk, path.c_str(), value.data(), value.size(), -1);
 	switch(result)
 	{
 		case ZOK:
@@ -80,7 +80,7 @@ void ZooKeeper::setValue(const char* path, const std::string& value)
 	}
 }
 
-std::string ZooKeeper::createNode(const char* path, const std::string& value, EphemeralMode ephemeralMode, SequenceMode sequenceMode)
+std::string ZooKeeper::createNode(const std::string& path, const std::string& value, EphemeralMode ephemeralMode, SequenceMode sequenceMode)
 {
 	int createFlags = 0;
 	if(ephemeralMode == IsEphemeral)
@@ -92,7 +92,7 @@ std::string ZooKeeper::createNode(const char* path, const std::string& value, Ep
 		createFlags |= ZOO_SEQUENCE;
 	}
 	char buffer[1024];
-	const int result = zoo_create(m_zk, path, value.data(), value.size(), &ZOO_OPEN_ACL_UNSAFE, createFlags, buffer, sizeof(buffer));
+	const int result = zoo_create(m_zk, path.c_str(), value.data(), value.size(), &ZOO_OPEN_ACL_UNSAFE, createFlags, buffer, sizeof(buffer));
 	switch(result)
 	{
 		case ZOK:

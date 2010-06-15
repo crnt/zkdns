@@ -23,7 +23,7 @@ RecordProvider* handleToRecordProvider(void* handle)
 	return recordProvider;
 }
 
-void* record_provider_initialize(const char* zone)
+void* rp_initialize(const char* zone)
 {
 	assert(RecordProvider::factory());
 	return (*RecordProvider::factory())(std::string(zone));
@@ -37,9 +37,10 @@ int rp_shutdown(void* handle)
 const char* rp_get_a_record(void* handle, const char* zone)
 {
 	const std::string result = handleToRecordProvider(handle)->aRecord(std::string(zone));
-	const size_t size = result.size();
+	const size_t size = result.size() + 1; // null byte
 	char* out = static_cast<char*>(malloc(size));
-	memcpy(out, result.data(), size);
+	::bzero(out, size);
+	::memcpy(out, result.data(), size);
 	return out;
 }
 

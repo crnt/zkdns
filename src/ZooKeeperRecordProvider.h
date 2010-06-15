@@ -16,6 +16,7 @@
 #pragma once
 
 #include "../lib-cpp/RecordProvider.h"
+#include <vector>
 
 class ZooKeeper;
 
@@ -28,6 +29,7 @@ class ZooKeeperRecordProvider : public RecordProvider
 		std::string aRecord(const std::string& zone) const;
 		std::string aaaaRecord(const std::string& zone) const;
 	private:
-		std::string m_topZone;
+		static std::vector<std::string> splitZone(const std::string& zone);
+		std::vector<std::string> m_topZone;
 		ZooKeeper* m_zk;
 };

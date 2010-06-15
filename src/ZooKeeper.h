@@ -46,12 +46,12 @@ class ZooKeeper
 			IsNotSequence
 		};
 
-		std::string value(const char* path);
-		void setValue(const char* path, const std::string& value);
+		std::string value(const std::string& path);
+		void setValue(const std::string& path, const std::string& value);
 		// Does not neccessarily return the same path, especially if
 		// IsSequence is set.
-		std::string createNode(const char* path, const std::string& value = std::string(), EphemeralMode ephemeralMode = IsNotEphemeral, SequenceMode sequenceMode = IsNotSequence);
-		void deleteNode(const char* path);
+		std::string createNode(const std::string& path, const std::string& value = std::string(), EphemeralMode ephemeralMode = IsNotEphemeral, SequenceMode sequenceMode = IsNotSequence);
+		void deleteNode(const std::string& path);
 	private:
 		zhandle_t* m_zk;
 

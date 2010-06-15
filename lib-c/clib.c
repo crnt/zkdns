@@ -21,6 +21,8 @@
 
 #define INBUF_SIZE 4096
 
+void* rp_handle;
+
 static int udp_bind(int sock, int port, const char *my_address)
 {
     struct sockaddr_in addr;
@@ -53,7 +55,7 @@ get_rrset(const ldns_zone *zone, const ldns_rdf *owner_name, const ldns_rr_type 
 
 	ldns_rr* rr = ldns_rr_new_frm_type(LDNS_RR_TYPE_A);
 	ldns_rr_set_owner(rr, ldns_rdf_clone(owner_name));
-	ldns_rdf* rdf = ldns_rdf_new_frm_str(LDNS_RDF_TYPE_A, "10.0.0.1");
+	ldns_rdf* rdf = ldns_rdf_new_frm_str(LDNS_RDF_TYPE_A, rp_get_a_record(rp_handle, owner_name->_data));
 	ldns_rr_push_rdf(rr, rdf);
 	
 	ldns_rr_list_push_rr(rrlist, ldns_rr_clone(rr));
@@ -63,7 +65,7 @@ get_rrset(const ldns_zone *zone, const ldns_rdf *owner_name, const ldns_rr_type 
 
 void zkdns_start(const char* my_address, int port, const char* my_zone)
 {
-
+	rp_handle = rp_initialize(my_zone);
 	/* network */
 	int sock;
 	ssize_t nb;
@@ -166,4 +168,5 @@ void zkdns_start(const char* my_address, int port, const char* my_zone)
 	
 	ldns_rdf_deep_free(origin);
 	ldns_zone_deep_free(zone);
+	rp_shutdown(rp_handle);
 }

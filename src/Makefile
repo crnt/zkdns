@@ -6,7 +6,7 @@ LDFLAGS=\
 	-L../lib-cpp \
 	-L../lib-c \
 	-lldns \
-	-lzookeeper_st \
+	-lzookeeper_mt \
 
 .PHONY: clean
 
