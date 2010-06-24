@@ -6,6 +6,7 @@ LDFLAGS=\
 	-L../lib-cpp \
 	-L../lib-c \
 	-lldns \
+	-lboost_program_options \
 	-lzookeeper_mt \
 
 .PHONY: clean
