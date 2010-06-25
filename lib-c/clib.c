@@ -46,7 +46,15 @@ static int udp_bind(int sock, int port, const char *my_address)
 ldns_rr_list *
 get_rrset(const ldns_zone *zone, const ldns_rdf *owner_name, const ldns_rr_type qtype, const ldns_rr_class qclass)
 {
-	char* result = rp_get_a_record(rp_handle, owner_name->_data);
+	const char* result;
+	switch(qtype)
+	{
+		case LDNS_RR_TYPE_A:
+			result = rp_get_a_record(rp_handle, owner_name->_data);
+			break;
+		default:
+			result = 0;
+	}
 	if(!result)
 	{
 		return 0;
